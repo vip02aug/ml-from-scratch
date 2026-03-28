@@ -1,160 +1,145 @@
-# Linear Regression: Closed Form vs Gradient Descent
+# Linear Regression: Closed Form vs Gradient Descent (Full Analysis)
 
 ## Introduction
 
-This project implements Linear Regression from scratch using two approaches:
+This project implements Linear Regression from scratch using:
 
-1. Closed-form solution (Normal Equation)
-2. Gradient Descent (iterative optimization)
+- Closed-form solution (Normal Equation)
+- Gradient Descent (iterative optimization)
 
-The goal is to understand:
-- Mathematical formulation
-- Optimization process
-- Performance differences
-- Scalability behavior
+The focus is on **practical comparison**, including:
+- Dataset size scaling
+- Feature dimension scaling
+- Learning rate effects
+- Time and convergence behavior
 
----
-
-## Mathematical Model
-
-For a single feature:
-
-$$ \hat{y} = mx + b $$
-
-For multiple features (vector form):
-
-$$ \hat{y} = Xw + b $$
-
-Where:
-- \( X \) = input features  
-- \( w \) = weights  
-- \( b \) = bias  
-- \( \hat{y} \) = predicted output  
+Implementation is fully from scratch in Python. :contentReference[oaicite:0]{index=0}
 
 ---
 
-## Loss Function (Mean Squared Error)
+## Experiment 1: Dataset Size Comparison (d = 1)
 
-$$ L = \frac{1}{n} \sum (y - \hat{y})^2 $$
-
-Goal: minimize the error between predicted and actual values.
-
----
-
-## Closed-Form Solution (Normal Equation)
-
-$$ w = (X^T X)^{-1} X^T y $$
-
-### Characteristics
-- Direct analytical solution
-- No iterations required
-- Computationally expensive for large datasets
-- Requires matrix inversion
-
----
-
-## Gradient Descent Solution
-
-### Update Rule
-
-$$ w = w - \alpha \frac{\partial L}{\partial w} $$  
-$$ b = b - \alpha \frac{\partial L}{\partial b} $$  
-
-Where:
-- \( \alpha \) = learning rate  
-
-### Characteristics
-- Iterative optimization method
-- Scalable to large datasets
-- Approximate solution
-- Requires tuning (learning rate, epochs)
-
----
-
-## Implementation
-
-Notebook: [Linear Regression Code](Linear_Regression.ipynb)
-
----
-
-## Results
-
-### Regression Fit
-![Regression Plot](regression_plot.png)
-
-### Loss Curve (Gradient Descent)
-![Loss Curve](loss_curve.png)
-
----
-
-## Comparison: Closed Form vs Gradient Descent
-
-| Method            | Type        | Speed (Small Data) | Scalability | Accuracy        |
-|------------------|------------|--------------------|-------------|-----------------|
-| Closed Form      | Analytical | Fast               | Poor        | Exact solution  |
-| Gradient Descent | Iterative  | Slower             | Good        | Approximate     |
-
----
-
-## Time Complexity Analysis
-
-Closed Form:
-- Complexity: $$( O(d^3)$$
-- Dominated by matrix inversion
-
-Gradient Descent:
-- Complexity: $$O(n \cdot d \cdot \text{epochs})$$
+| Size  | CF Time | GD Time | CF MSE | GD MSE |
+|-------|--------|--------|--------|--------|
+| 100   | ~0.0003 | ~0.03  | low    | low    |
+| 500   | ~0.0002 | ~0.03  | low    | low    |
+| 1000  | ~0.0002 | ~0.037 | low    | low    |
+| 5000  | ~0.0003 | ~0.077 | low    | low    |
+| 10000 | ~0.0005 | ~0.12  | low    | low    |
 
 ### Observation
 
-- Closed form is efficient for small datasets
-- Performance degrades with increasing dataset size
-- Gradient descent scales better for large data
+- Closed-form remains extremely fast
+- Gradient descent time increases with dataset size
+
+### Key Insight
+
+Closed-form does **not depend on n strongly when d = 1**,  
+because matrix inversion is trivial.
 
 ---
 
-## Experiments with Dataset Size
+## Experiment 2: Feature Dimension Comparison (n = 1000)
 
-We tested both methods with increasing data sizes.
+### Observation
 
-### Observations
+- Closed-form time increases significantly with feature dimension
+- Gradient descent scales more smoothly
 
-- Closed-form computation time increases significantly
-- Gradient descent remains stable with larger datasets
-- Both methods produce similar MSE values
+### Key Insight
 
----
+- Closed-form complexity dominated by \( d^3 \)
+- Gradient descent depends on \( n \cdot d \cdot T \)
 
-## Learning Rate Experiment
-
-- Small learning rate → slow convergence  
-- Optimal learning rate → stable and fast convergence  
-- Large learning rate → unstable behaviour  
+👉 Closed-form becomes impractical for high-dimensional data.
 
 ---
 
-## Insights
+## Experiment 3: Learning Rate Comparison
 
-- Closed-form solution provides exact parameters but is not scalable
-- Gradient descent is preferred in real-world machine learning
-- Optimisation plays a crucial role in ML algorithms
-- A trade-off exists between accuracy and computational efficiency
+| LR     | Time (s) | Epochs | Final MSE | Converged |
+|--------|----------|--------|-----------|----------|
+| 0.0001 | High     | High   | Low       | Yes      |
+| 0.001  | Medium   | Medium | Low       | Yes      |
+| 0.01   | Low      | Low    | Low       | Yes      |
+| 0.1    | Very Low | Very Low | Low     | Yes      |
+| 0.5    | Unstable | High / Oscillation | High | No / Poor |
+
+### Observation
+
+- Small learning rate → slow convergence (many epochs)
+- Moderate learning rate → fastest convergence
+- Large learning rate → instability
+
+### Key Insight
+
+Learning rate affects:
+
+Learning Rate → Epochs → Time → Final MSE
 
 ---
 
-## Connection to Control Systems
+## Experiment 4: Full Comparison
 
-Linear regression is closely related to **system identification**, where system parameters are estimated from observed data.
+| Method | LR | Time | Epochs | MSE |
+|--------|----|------|--------|-----|
+| Closed Form | - | Very Low | 1 | Optimal |
+| GD | varies | Depends | Depends | Approx |
+
+### Observation
+
+- Closed-form is fastest for low-dimensional data
+- Gradient descent performance depends on learning rate
+- GD requires multiple iterations, CF does not
+
+---
+
+## Time Complexity
+
+Closed Form:
+O(n d² + d³)
+
+Gradient Descent:
+O(n d T)
+
+Where:
+- n = number of samples
+- d = number of features
+- T = number of epochs
+
+---
+
+## Key Insights
+
+1. Closed-form is efficient only when feature dimension is small  
+2. Gradient descent scales better for large datasets  
+3. Learning rate controls convergence speed  
+4. Increasing dataset size mainly affects gradient descent  
+5. Increasing feature dimension mainly affects closed-form  
+6. Learning rate indirectly affects runtime via epochs  
+
+---
+
+## Visualization
+
+Generated plots include:
+- Time vs Dataset Size
+- Time vs Feature Dimension
+- Loss curves for different learning rates
+- Epochs vs Learning Rate
+- MSE vs Learning Rate
+- Time vs Learning Rate
 
 ---
 
 ## Conclusion
 
 This project demonstrates:
-- Mathematical understanding of linear regression
-- Practical implementation from scratch
-- Comparison of analytical and iterative methods
-- Performance and scalability analysis
+
+- Analytical vs iterative optimization
+- Scalability limitations of closed-form solution
+- Importance of learning rate in optimization
+- Practical performance trade-offs in ML systems
 
 ---
 
