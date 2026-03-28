@@ -1,44 +1,163 @@
-# Linear Regression from Scratch
+# Linear Regression: Closed Form vs Gradient Descent
 
-## Model
+## Introduction
 
-y = Xw + b
+This project implements Linear Regression from scratch using two approaches:
 
-- X: Input features
-- w: Weights
-- b: Bias
+1. Closed-form solution (Normal Equation)
+2. Gradient Descent (iterative optimization)
 
----
-
-## Loss Function (MSE)
-
-L = (1/n) * Σ (y - ŷ)^2
-
-Goal: Minimize error between prediction and actual value.
+The goal is to understand:
+- Mathematical formulation
+- Optimization process
+- Performance differences
+- Scalability behavior
 
 ---
 
-## Gradient
+## Mathematical Model
 
-dL/dw = (-2/n) Xᵀ (y - ŷ)
+For a single feature:
 
-dL/db = (-2/n) Σ (y - ŷ)
+$$ \hat{y} = mx + b $$
+
+For multiple features (vector form):
+
+$$ \hat{y} = Xw + b $$
+
+Where:
+- \( X \) = input features  
+- \( w \) = weights  
+- \( b \) = bias  
+- \( \hat{y} \) = predicted output  
 
 ---
 
-## Algorithm
+## Loss Function (Mean Squared Error)
 
-1. Initialize weights and bias
-2. Predict output
-3. Compute loss
-4. Compute gradients
-5. Update weights
-6. Repeat
+$$ L = \frac{1}{n} \sum (y - \hat{y})^2 $$
+
+Goal: minimize the error between predicted and actual values.
 
 ---
 
-## Observations
+## Closed-Form Solution (Normal Equation)
 
-- Loss decreases over time
-- Learning rate affects convergence
-- Model fits linear data well
+$$ w = (X^T X)^{-1} X^T y $$
+
+### Characteristics
+- Direct analytical solution
+- No iterations required
+- Computationally expensive for large datasets
+- Requires matrix inversion
+
+---
+
+## Gradient Descent Solution
+
+### Update Rule
+
+$$ w = w - \alpha \frac{\partial L}{\partial w} $$  
+$$ b = b - \alpha \frac{\partial L}{\partial b} $$  
+
+Where:
+- \( \alpha \) = learning rate  
+
+### Characteristics
+- Iterative optimization method
+- Scalable to large datasets
+- Approximate solution
+- Requires tuning (learning rate, epochs)
+
+---
+
+## Implementation
+
+Notebook: [Linear Regression Code](Linear_Regression.ipynb)
+
+---
+
+## Results
+
+### Regression Fit
+![Regression Plot](regression_plot.png)
+
+### Loss Curve (Gradient Descent)
+![Loss Curve](loss_curve.png)
+
+---
+
+## Comparison: Closed Form vs Gradient Descent
+
+| Method            | Type        | Speed (Small Data) | Scalability | Accuracy        |
+|------------------|------------|--------------------|-------------|-----------------|
+| Closed Form      | Analytical | Fast               | Poor        | Exact solution  |
+| Gradient Descent | Iterative  | Slower             | Good        | Approximate     |
+
+---
+
+## Time Complexity Analysis
+
+Closed Form:
+- Complexity: $$( O(d^3)$$
+- Dominated by matrix inversion
+
+Gradient Descent:
+- Complexity: $$O(n \cdot d \cdot \text{epochs})$$
+
+### Observation
+
+- Closed form is efficient for small datasets
+- Performance degrades with increasing dataset size
+- Gradient descent scales better for large data
+
+---
+
+## Experiments with Dataset Size
+
+We tested both methods with increasing data sizes.
+
+### Observations
+
+- Closed-form computation time increases significantly
+- Gradient descent remains stable with larger datasets
+- Both methods produce similar MSE values
+
+---
+
+## Learning Rate Experiment
+
+- Small learning rate → slow convergence  
+- Optimal learning rate → stable and fast convergence  
+- Large learning rate → unstable behaviour  
+
+---
+
+## Insights
+
+- Closed-form solution provides exact parameters but is not scalable
+- Gradient descent is preferred in real-world machine learning
+- Optimisation plays a crucial role in ML algorithms
+- A trade-off exists between accuracy and computational efficiency
+
+---
+
+## Connection to Control Systems
+
+Linear regression is closely related to **system identification**, where system parameters are estimated from observed data.
+
+---
+
+## Conclusion
+
+This project demonstrates:
+- Mathematical understanding of linear regression
+- Practical implementation from scratch
+- Comparison of analytical and iterative methods
+- Performance and scalability analysis
+
+---
+
+## Author
+
+Vipul Verma
